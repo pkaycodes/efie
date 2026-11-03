@@ -13,6 +13,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { ListingCard } from '../components/ListingCard'
 import { listingSearchText } from '../lib/format'
 import { useStore } from '../lib/store'
+import { usePageTitle } from '../lib/usePageTitle'
 import { PROPERTY_TYPES } from '../types'
 
 const bedroomOptions = [
@@ -32,6 +33,7 @@ const sortOptions = [
 ]
 
 export function BrowsePage() {
+  usePageTitle('Rentals in Ghana')
   const { listings } = useStore()
   const [searchParams, setSearchParams] = useSearchParams()
   const [filtersOpen, setFiltersOpen] = useState(false)

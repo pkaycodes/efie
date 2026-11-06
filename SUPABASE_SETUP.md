@@ -57,6 +57,10 @@ npm run build
 
 Deploy the generated `dist` folder to the `gh-pages` branch as usual.
 
+If you host on Cloudflare Pages, Vercel or Netlify instead, add the same two
+variables in the project's environment settings. The host will then build with
+the shared database enabled on every push.
+
 ## Checking it worked
 
 - Post a listing in one browser.

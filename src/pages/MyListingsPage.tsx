@@ -16,7 +16,7 @@ import { usePageTitle } from '../lib/usePageTitle'
 
 export function MyListingsPage() {
   usePageTitle('My listings')
-  const { userListings, removeListing } = useStore()
+  const { userListings, removeListing, isShared } = useStore()
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const listingToDelete = userListings.find((listing) => listing.id === deleteId)
 
@@ -28,8 +28,9 @@ export function MyListingsPage() {
             <span className="eyebrow">Landlord dashboard</span>
             <h1>Your listings</h1>
             <p>
-              Manage the properties you have posted from this browser. Keep details
-              fresh so renters know what is still available.
+              Manage the properties you have posted
+              {isShared ? ' to Efie' : ' from this browser'}. Keep details fresh so
+              renters know what is still available.
             </p>
           </div>
           <Link className="btn btn--dark btn--sm page-heading__cta" to="/post">
@@ -42,8 +43,8 @@ export function MyListingsPage() {
           <>
             <p className="dashboard-note">
               {userListings.length}{' '}
-              {userListings.length === 1 ? 'live listing' : 'live listings'} · Posted
-              on this device
+              {userListings.length === 1 ? 'live listing' : 'live listings'} ·{' '}
+              {isShared ? 'Visible to everyone' : 'Posted on this device'}
             </p>
             <div className="managed-list">
               {userListings.map((listing) => (
@@ -126,7 +127,7 @@ export function MyListingsPage() {
         confirmLabel="Delete listing"
         onCancel={() => setDeleteId(null)}
         onConfirm={() => {
-          if (deleteId) removeListing(deleteId)
+          if (deleteId) void removeListing(deleteId)
           setDeleteId(null)
         }}
       >

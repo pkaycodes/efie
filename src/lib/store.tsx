@@ -7,11 +7,23 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { seedListings } from '../data/listings'
-import type { Listing, ListingDraft } from '../types'
+import { getSupabase, isSupabaseConfigured } from './supabase'
+import type {
+  Furnishing,
+  Landlord,
+  Listing,
+  ListingDraft,
+  PropertyType,
+  Region,
+  RentPeriod,
+} from '../types'
 
 const USER_LISTINGS_KEY = 'efie.user-listings.v1'
 const SAVED_KEY = 'efie.saved-listings.v1'
+const PHOTO_BUCKET = 'listing-photos'
+const PHOTO_MARKER = `/storage/v1/object/public/${PHOTO_BUCKET}/`
 
 interface ToastMessage {
   id: number
@@ -23,16 +35,49 @@ interface StoreValue {
   userListings: Listing[]
   saved: string[]
   toast: ToastMessage | null
-  addListing: (draft: ListingDraft) => Listing
-  removeListing: (id: string) => void
-  toggleSaved: (id: string) => void
+  isShared: boolean
+  addListing: (draft: ListingDraft) => Promise<Listing>
+  removeListing: (id: string) => Promise<void>
+  toggleSaved: (id: string) => Promise<void>
   isSaved: (id: string) => boolean
   getListing: (id: string) => Listing | undefined
   notify: (message: string) => void
   dismissToast: () => void
 }
 
+interface ListingRow {
+  id: string
+  owner_id: string
+  title: string
+  type: string
+  price: number
+  period: string
+  area: string
+  city: string
+  region: string
+  landmark: string
+  lat: number | null
+  lng: number | null
+  bedrooms: number
+  bathrooms: number
+  size_sqm: number
+  furnishing: string
+  amenities: string[] | null
+  description: string
+  photos: string[] | null
+  landlord: Landlord
+  featured: boolean
+  verified: boolean
+  available_now: boolean
+  available_from: string | null
+  deposit_months: number | null
+  utilities_included: boolean
+  created_at: string
+}
+
 const StoreContext = createContext<StoreValue | null>(null)
+
+let viewerPromise: Promise<string> | null = null
 
 function loadUserListings(): Listing[] {
   try {
@@ -88,9 +133,145 @@ function makeId() {
   return `user-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`
 }
 
+function rowToListing(row: ListingRow): Listing {
+  return {
+    id: row.id,
+    title: row.title,
+    type: row.type as PropertyType,
+    price: row.price,
+    period: row.period as RentPeriod,
+    area: row.area,
+    city: row.city,
+    region: row.region as Region,
+    landmark: row.landmark,
+    lat: row.lat ?? 0,
+    lng: row.lng ?? 0,
+    bedrooms: row.bedrooms,
+    bathrooms: row.bathrooms,
+    sizeSqm: row.size_sqm,
+    furnishing: row.furnishing as Furnishing,
+    amenities: row.amenities ?? [],
+    description: row.description,
+    photos: row.photos ?? [],
+    landlord: row.landlord,
+    featured: row.featured,
+    verified: row.verified,
+    availableNow: row.available_now,
+    availableFrom: row.available_from ?? undefined,
+    depositMonths: row.deposit_months ?? undefined,
+    utilitiesIncluded: row.utilities_included,
+    createdAt: row.created_at,
+    userCreated: true,
+  }
+}
+
+function listingToRow(listing: Listing, ownerId: string) {
+  return {
+    id: listing.id,
+    owner_id: ownerId,
+    title: listing.title,
+    type: listing.type,
+    price: listing.price,
+    period: listing.period,
+    area: listing.area,
+    city: listing.city,
+    region: listing.region,
+    landmark: listing.landmark,
+    lat: listing.lat,
+    lng: listing.lng,
+    bedrooms: listing.bedrooms,
+    bathrooms: listing.bathrooms,
+    size_sqm: listing.sizeSqm,
+    furnishing: listing.furnishing,
+    amenities: listing.amenities,
+    description: listing.description,
+    photos: listing.photos,
+    landlord: listing.landlord,
+    featured: listing.featured,
+    verified: listing.verified,
+    available_now: listing.availableNow,
+    available_from: listing.availableFrom ?? null,
+    deposit_months: listing.depositMonths ?? null,
+    utilities_included: listing.utilitiesIncluded,
+    created_at: listing.createdAt,
+  }
+}
+
+/**
+ * Every visitor gets a lightweight anonymous Supabase user. It keeps the
+ * posting flow account-free while still letting people manage only their own
+ * listings and saved rentals through row-level security.
+ */
+function getViewerId(supabase: SupabaseClient): Promise<string> {
+  if (!viewerPromise) {
+    viewerPromise = (async () => {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+      if (sessionError) throw sessionError
+      if (sessionData.session?.user) return sessionData.session.user.id
+
+      const { data, error } = await supabase.auth.signInAnonymously()
+      if (error) throw error
+      if (!data.user) throw new Error('Could not start a secure session.')
+      return data.user.id
+    })().catch((error: unknown) => {
+      viewerPromise = null
+      throw error
+    })
+  }
+  return viewerPromise
+}
+
+async function uploadPhotos(
+  supabase: SupabaseClient,
+  photos: string[],
+  viewerId: string,
+): Promise<string[]> {
+  const uploaded: string[] = []
+
+  for (const photo of photos) {
+    if (!photo.startsWith('data:')) {
+      uploaded.push(photo)
+      continue
+    }
+
+    const blob = await (await fetch(photo)).blob()
+    const extension =
+      blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg'
+    const path = `${viewerId}/${makeId()}.${extension}`
+    const { error } = await supabase.storage.from(PHOTO_BUCKET).upload(path, blob, {
+      cacheControl: '31536000',
+      contentType: blob.type || 'image/jpeg',
+    })
+
+    if (error) throw new Error('Could not upload your photos. Please try again.')
+
+    uploaded.push(supabase.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl)
+  }
+
+  return uploaded
+}
+
+async function removePhotos(supabase: SupabaseClient, photos: string[]) {
+  const paths = photos
+    .map((photo) => {
+      const index = photo.indexOf(PHOTO_MARKER)
+      return index >= 0 ? photo.slice(index + PHOTO_MARKER.length) : null
+    })
+    .filter((path): path is string => Boolean(path))
+
+  if (!paths.length) return
+
+  try {
+    await supabase.storage.from(PHOTO_BUCKET).remove(paths)
+  } catch {
+    // Removing the listing matters more than tidying its photo files.
+  }
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [userListings, setUserListings] = useState<Listing[]>(loadUserListings)
   const [saved, setSaved] = useState<string[]>(loadSaved)
+  const [sharedReady, setSharedReady] = useState(false)
   const [toast, setToast] = useState<ToastMessage | null>(null)
 
   const listings = useMemo(
@@ -110,8 +291,54 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const dismissToast = useCallback(() => setToast(null), [])
 
+  useEffect(() => {
+    const clientPromise = getSupabase()
+    if (!clientPromise) return
+
+    let cancelled = false
+
+    void (async () => {
+      try {
+        const supabase = await clientPromise
+        const viewerId = await getViewerId(supabase)
+        const [listingsResult, savedResult] = await Promise.all([
+          supabase.from('listings').select('*').order('created_at', { ascending: false }),
+          supabase.from('saved_listings').select('listing_id').eq('user_id', viewerId),
+        ])
+
+        if (listingsResult.error) throw listingsResult.error
+        if (cancelled) return
+
+        const remoteListings = (listingsResult.data as ListingRow[]).map(rowToListing)
+        setUserListings(remoteListings)
+        setSharedReady(true)
+        try {
+          saveUserListings(remoteListings)
+        } catch {
+          // The shared copy is authoritative; the cache is only a fallback.
+        }
+
+        if (!savedResult.error) {
+          const ids = (savedResult.data as { listing_id: string }[]).map(
+            (row) => row.listing_id,
+          )
+          setSaved(ids)
+          saveSaved(ids)
+        }
+      } catch {
+        if (!cancelled) {
+          notify('Could not reach the shared listings. Showing what is saved in this browser.')
+        }
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [notify])
+
   const addListing = useCallback(
-    (draft: ListingDraft) => {
+    async (draft: ListingDraft): Promise<Listing> => {
       const listing: Listing = {
         ...draft,
         id: makeId(),
@@ -120,6 +347,35 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         userCreated: true,
         createdAt: new Date().toISOString(),
       }
+
+      const clientPromise = getSupabase()
+
+      if (clientPromise) {
+        const supabase = await clientPromise
+        const viewerId = await getViewerId(supabase)
+        const photos = await uploadPhotos(supabase, draft.photos, viewerId)
+        const savedListing = { ...listing, photos }
+        const { error } = await supabase
+          .from('listings')
+          .insert(listingToRow(savedListing, viewerId))
+
+        if (error) {
+          throw new Error('Could not publish your listing. Please try again.')
+        }
+
+        setUserListings((current) => {
+          const next = [savedListing, ...current]
+          try {
+            saveUserListings(next)
+          } catch {
+            // The shared copy is safe even if the local cache is full.
+          }
+          return next
+        })
+        notify('Your property is live. Share it with a tenant on WhatsApp.')
+        return savedListing
+      }
+
       const next = [listing, ...userListings]
       setUserListings(next)
       try {
@@ -134,7 +390,35 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   )
 
   const removeListing = useCallback(
-    (id: string) => {
+    async (id: string) => {
+      const clientPromise = getSupabase()
+
+      if (clientPromise) {
+        try {
+          const supabase = await clientPromise
+          const viewerId = await getViewerId(supabase)
+          const { error } = await supabase
+            .from('listings')
+            .delete()
+            .eq('id', id)
+            .eq('owner_id', viewerId)
+
+          if (error) throw error
+
+          await supabase
+            .from('saved_listings')
+            .delete()
+            .eq('user_id', viewerId)
+            .eq('listing_id', id)
+
+          const removed = userListings.find((listing) => listing.id === id)
+          if (removed) void removePhotos(supabase, removed.photos)
+        } catch {
+          notify('Could not delete that listing. Check your connection and try again.')
+          return
+        }
+      }
+
       const next = userListings.filter((listing) => listing.id !== id)
       setUserListings(next)
       setSaved((current) => {
@@ -156,18 +440,55 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [notify, userListings],
   )
 
-  const toggleSaved = useCallback((id: string) => {
-    setSaved((current) => {
-      const isInList = current.includes(id)
-      const next = isInList ? current.filter((item) => item !== id) : [...current, id]
+  const toggleSaved = useCallback(
+    async (id: string) => {
+      const isInList = saved.includes(id)
+      const next = isInList ? saved.filter((item) => item !== id) : [...saved, id]
+
+      setSaved(next)
       try {
         saveSaved(next)
       } catch {
         // Saving the shortlist is best effort.
       }
-      return next
-    })
-  }, [])
+
+      const clientPromise = getSupabase()
+      if (!clientPromise) return
+
+      try {
+        const supabase = await clientPromise
+        const viewerId = await getViewerId(supabase)
+
+        if (isInList) {
+          const { error } = await supabase
+            .from('saved_listings')
+            .delete()
+            .eq('user_id', viewerId)
+            .eq('listing_id', id)
+          if (error) throw error
+        } else {
+          const { error } = await supabase
+            .from('saved_listings')
+            .insert({ user_id: viewerId, listing_id: id })
+          if (error && error.code !== '23505') throw error
+        }
+      } catch {
+        setSaved((current) => {
+          const rolledBack = isInList
+            ? [...current, id]
+            : current.filter((item) => item !== id)
+          try {
+            saveSaved(rolledBack)
+          } catch {
+            // Saving the shortlist is best effort.
+          }
+          return rolledBack
+        })
+        notify('Could not sync your saved rentals. Please try again.')
+      }
+    },
+    [notify, saved],
+  )
 
   const isSaved = useCallback((id: string) => saved.includes(id), [saved])
 
@@ -182,6 +503,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       userListings,
       saved,
       toast,
+      isShared: isSupabaseConfigured && sharedReady,
       addListing,
       removeListing,
       toggleSaved,
@@ -195,6 +517,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       userListings,
       saved,
       toast,
+      sharedReady,
       addListing,
       removeListing,
       toggleSaved,

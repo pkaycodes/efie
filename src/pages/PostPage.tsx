@@ -106,6 +106,8 @@ export function PostPage() {
   const [photos, setPhotos] = useState<string[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [uploading, setUploading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [photoError, setPhotoError] = useState('')
   const [dragging, setDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -224,7 +226,7 @@ export function PostPage() {
     return Object.keys(nextErrors).length === 0
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!validate()) {
       window.setTimeout(() => {
@@ -239,41 +241,55 @@ export function PostPage() {
     const phone = normalisePhone(form.phone)
     const whatsapp = form.whatsappSame ? phone : normalisePhone(form.whatsapp)
     const coords = coordsForCity(form.city)
-    const listing = addListing({
-      title: form.title.trim(),
-      type: form.type,
-      price: Number(form.price),
-      period: form.period,
-      area: form.area.trim(),
-      city: form.city.trim(),
-      region: form.region,
-      landmark: form.landmark.trim() || `${form.area.trim()}, ${form.city.trim()}`,
-      lat: coords.lat,
-      lng: coords.lng,
-      bedrooms: form.bedrooms,
-      bathrooms: form.bathrooms,
-      sizeSqm: Number(form.sizeSqm),
-      furnishing: form.furnishing,
-      amenities: form.amenities,
-      description: form.description.trim(),
-      photos: photos.length ? photos : ['images/placeholder.svg'],
-      landlord: {
-        name: form.landlordName.trim(),
-        phone,
-        whatsapp,
-        verified: false,
-        memberSince: String(new Date().getFullYear()),
-        responseTime: 'Usually responds within 1 day',
-      },
-      availableNow: form.availableNow,
-      availableFrom: form.availableNow
-        ? undefined
-        : formatDisplayDate(form.availableFrom),
-      depositMonths: form.depositMonths ? Number(form.depositMonths) : undefined,
-      utilitiesIncluded: form.utilitiesIncluded,
-    })
 
-    navigate(`/listing/${listing.id}`)
+    setSubmitError('')
+    setSubmitting(true)
+
+    try {
+      const listing = await addListing({
+        title: form.title.trim(),
+        type: form.type,
+        price: Number(form.price),
+        period: form.period,
+        area: form.area.trim(),
+        city: form.city.trim(),
+        region: form.region,
+        landmark: form.landmark.trim() || `${form.area.trim()}, ${form.city.trim()}`,
+        lat: coords.lat,
+        lng: coords.lng,
+        bedrooms: form.bedrooms,
+        bathrooms: form.bathrooms,
+        sizeSqm: Number(form.sizeSqm),
+        furnishing: form.furnishing,
+        amenities: form.amenities,
+        description: form.description.trim(),
+        photos: photos.length ? photos : ['images/placeholder.svg'],
+        landlord: {
+          name: form.landlordName.trim(),
+          phone,
+          whatsapp,
+          verified: false,
+          memberSince: String(new Date().getFullYear()),
+          responseTime: 'Usually responds within 1 day',
+        },
+        availableNow: form.availableNow,
+        availableFrom: form.availableNow
+          ? undefined
+          : formatDisplayDate(form.availableFrom),
+        depositMonths: form.depositMonths ? Number(form.depositMonths) : undefined,
+        utilitiesIncluded: form.utilitiesIncluded,
+      })
+
+      navigate(`/listing/${listing.id}`)
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : 'Could not publish your listing. Please try again.',
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -915,12 +931,17 @@ export function PostPage() {
                       {errors.consent}
                     </p>
                   )}
+                  {submitError && (
+                    <p className="field-error" role="alert">
+                      {submitError}
+                    </p>
+                  )}
                   <button
                     className="btn btn--accent btn--wide submit-block__button"
                     type="submit"
-                    disabled={uploading}
+                    disabled={uploading || submitting}
                   >
-                    Publish my listing
+                    {submitting ? 'Publishing…' : 'Publish my listing'}
                     <ArrowUpRight size={19} aria-hidden="true" />
                   </button>
                   <p className="submit-block__note">

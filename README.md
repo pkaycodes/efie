@@ -25,7 +25,8 @@ Efie is a rental marketplace for Ghana. Landlords post houses, apartments, hoste
 - Post a property with photos, pricing, amenities and a map location in a few minutes.
 - Preview the listing before publishing.
 - Manage published listings from a dashboard and remove them when they are gone.
-- Photos are compressed in the browser before being stored locally.
+- Photos are compressed in the browser, then uploaded to Supabase Storage when a
+  backend is configured.
 
 ## Tech stack
 
@@ -34,7 +35,9 @@ Efie is a rental marketplace for Ghana. Landlords post houses, apartments, hoste
 - [Lucide](https://lucide.dev/) icons
 - Fraunces + Manrope via Fontsource
 - Hand-written CSS design system — no UI framework
-- Browser `localStorage` for posted listings and saved homes
+- [Supabase](https://supabase.com/) (optional) for shared listings, saved homes
+  and photo storage
+- Browser `localStorage` as the fallback when Supabase is not configured
 
 ## Run locally
 
@@ -57,9 +60,21 @@ The production build uses a relative Vite `base` and hash-based routing, so `dis
 
 <https://pkaycodes.github.io/efie/>
 
+## Shared database
+
+The site works without a backend, but posts and saved homes then live only in the
+browser that created them. To make listings shared between visitors, connect a
+free Supabase project:
+
+1. Run the SQL in [`supabase/schema.sql`](supabase/schema.sql).
+2. Enable anonymous sign-ins in Supabase Authentication settings.
+3. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` to `.env.local`.
+
+Full steps are in [`SUPABASE_SETUP.md`](SUPABASE_SETUP.md).
+
 ## Demo notice
 
-This is a portfolio/demo project. The seeded listings, photos, prices and phone numbers are sample data, not real property offers. Landlord posts and saved rentals live only in the browser that created them — there is no backend or shared database yet. Always verify a property, its ownership and the tenancy agreement in person before paying anything.
+This is a portfolio/demo project. The seeded listings, photos, prices and phone numbers are sample data, not real property offers. Without Supabase configured, landlord posts and saved rentals live only in the browser that created them. Always verify a property, its ownership and the tenancy agreement in person before paying anything.
 
 ## Project structure
 

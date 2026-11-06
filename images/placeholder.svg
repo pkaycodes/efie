@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#efe9db"/>
+      <stop offset="1" stop-color="#e3dbc9"/>
+    </linearGradient>
+    <pattern id="arches" width="160" height="160" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+      <path d="M30 145V75a35 35 0 0 1 70 0v70" fill="none" stroke="#1e2a4a" stroke-opacity=".08" stroke-width="2"/>
+      <circle cx="130" cy="45" r="3" fill="#ef8354" fill-opacity=".18"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#arches)"/>
+  <g transform="translate(600 402)">
+    <path d="M-92 8-4-71l88 79v94a13 13 0 0 1-13 13h-51v-63a20 20 0 0 0-40 0v63H-79a13 13 0 0 1-13-13V8Z" fill="none" stroke="#1e2a4a" stroke-width="9" stroke-linejoin="round"/>
+    <circle cx="72" cy="-52" r="20" fill="#ef8354"/>
+  </g>
+  <text x="600" y="622" text-anchor="middle" font-family="Georgia, serif" font-size="42" fill="#1e2a4a">A photo makes the place</text>
+  <text x="600" y="672" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" letter-spacing="3" fill="#6f6a5f">PHOTOS COMING SOON</text>
+</svg>

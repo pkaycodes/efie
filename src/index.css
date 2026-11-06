@@ -1398,7 +1398,7 @@ button {
 }
 
 .save-button.is-saved {
-  color: #b84535;
+  color: var(--danger);
 }
 
 .listing-card__body {
@@ -3042,7 +3042,7 @@ button {
   background: var(--green-soft);
   font-size: 9px;
   line-height: 1.5;
-  color: #496258;
+  color: var(--ink-soft);
 }
 
 .contact-card__note svg {
@@ -3398,7 +3398,7 @@ button {
 
 .field input[aria-invalid='true'],
 .field textarea[aria-invalid='true'] {
-  border-color: #c38276;
+  border-color: #d69a8e;
 }
 
 .field-error {
@@ -4558,11 +4558,11 @@ button {
 .safety-banner p {
   font-size: 11px;
   line-height: 1.7;
-  color: #675d49;
+  color: var(--ink-soft);
 }
 
 .safety-banner strong {
-  color: #483f30;
+  color: var(--ink);
 }
 
 .safety-banner a {

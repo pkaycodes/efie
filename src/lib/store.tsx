@@ -197,10 +197,17 @@ function listingToRow(listing: Listing, ownerId: string) {
   }
 }
 
+function getExistingViewerId(supabase: SupabaseClient): Promise<string | null> {
+  return supabase.auth.getSession().then(({ data, error }) => {
+    if (error) throw error
+    return data.session?.user.id ?? null
+  })
+}
+
 /**
- * Every visitor gets a lightweight anonymous Supabase user. It keeps the
- * posting flow account-free while still letting people manage only their own
- * listings and saved rentals through row-level security.
+ * Every visitor who posts or saves something gets a lightweight anonymous
+ * Supabase user. It keeps the flow account-free while still letting people
+ * manage only their own listings and saved rentals through row-level security.
  */
 function getViewerId(supabase: SupabaseClient): Promise<string> {
   if (!viewerPromise) {
@@ -300,11 +307,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     void (async () => {
       try {
         const supabase = await clientPromise
-        const viewerId = await getViewerId(supabase)
-        const [listingsResult, savedResult] = await Promise.all([
-          supabase.from('listings').select('*').order('created_at', { ascending: false }),
-          supabase.from('saved_listings').select('listing_id').eq('user_id', viewerId),
-        ])
+        const viewerId = await getExistingViewerId(supabase)
+        const listingsResult = await supabase
+          .from('listings')
+          .select('*')
+          .order('created_at', { ascending: false })
 
         if (listingsResult.error) throw listingsResult.error
         if (cancelled) return
@@ -318,12 +325,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           // The shared copy is authoritative; the cache is only a fallback.
         }
 
-        if (!savedResult.error) {
-          const ids = (savedResult.data as { listing_id: string }[]).map(
-            (row) => row.listing_id,
-          )
-          setSaved(ids)
-          saveSaved(ids)
+        if (viewerId) {
+          const savedResult = await supabase
+            .from('saved_listings')
+            .select('listing_id')
+            .eq('user_id', viewerId)
+
+          if (!savedResult.error && !cancelled) {
+            const ids = (savedResult.data as { listing_id: string }[]).map(
+              (row) => row.listing_id,
+            )
+            setSaved(ids)
+            saveSaved(ids)
+          }
         }
       } catch {
         if (!cancelled) {

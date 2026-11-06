@@ -1,32 +1,32 @@
 :root {
-  --paper: #f8f5ee;
-  --paper-2: #f1ece1;
-  --paper-3: #e9e1d2;
-  --white: #fffdf9;
-  --ink: #14241e;
-  --ink-soft: #374942;
-  --muted: #5f6862;
-  --muted-2: #636c67;
-  --line: #dfd8ca;
-  --line-strong: #c9bfae;
-  --green: #0b3b2e;
-  --green-2: #0f4a3a;
-  --green-3: #1b5b48;
-  --green-soft: #e8efe9;
-  --accent: #e2a642;
-  --accent-2: #8a5b12;
-  --accent-soft: #f7ead2;
-  --danger: #a94735;
-  --danger-soft: #f7e7e2;
+  --paper: #f8f4ed;
+  --paper-2: #efe9df;
+  --paper-3: #e5ddd1;
+  --white: #fffdf8;
+  --ink: #181c2b;
+  --ink-soft: #3c4358;
+  --muted: #5d6376;
+  --muted-2: #666c7e;
+  --line: #ddd6ca;
+  --line-strong: #c6bcac;
+  --green: #1e2a4a;
+  --green-2: #141c34;
+  --green-3: #2e4370;
+  --green-soft: #e7ecf5;
+  --accent: #ef8354;
+  --accent-2: #9b3b22;
+  --accent-soft: #fde8df;
+  --danger: #b02a37;
+  --danger-soft: #f9e3e5;
   --whatsapp: #1b7a48;
-  --whatsapp-dark: #187241;
+  --whatsapp-dark: #146338;
   --radius-sm: 10px;
   --radius: 16px;
   --radius-lg: 22px;
   --radius-xl: 30px;
-  --shadow-sm: 0 2px 10px rgba(20, 36, 30, 0.045);
-  --shadow: 0 18px 44px rgba(20, 36, 30, 0.09);
-  --shadow-lg: 0 30px 70px rgba(11, 45, 35, 0.16);
+  --shadow-sm: 0 2px 10px rgba(24, 28, 43, 0.045);
+  --shadow: 0 18px 44px rgba(24, 28, 43, 0.09);
+  --shadow-lg: 0 30px 70px rgba(20, 28, 52, 0.16);
   --font-sans: 'Manrope Variable', 'Manrope', -apple-system, BlinkMacSystemFont,
     'Segoe UI', sans-serif;
   --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman',
@@ -136,7 +136,7 @@ button {
 }
 
 :focus-visible {
-  outline: 3px solid rgba(198, 138, 43, 0.75);
+  outline: 3px solid rgba(214, 94, 59, 0.72);
   outline-offset: 3px;
 }
 
@@ -275,17 +275,17 @@ button {
 
 .btn--dark:hover {
   background: var(--green-2);
-  box-shadow: 0 9px 24px rgba(11, 59, 46, 0.2);
+  box-shadow: 0 9px 24px rgba(30, 42, 74, 0.2);
 }
 
 .btn--accent {
   background: var(--accent);
-  color: #1d2c23;
+  color: #2a1b20;
 }
 
 .btn--accent:hover {
-  background: #f0bc62;
-  box-shadow: 0 9px 24px rgba(198, 138, 43, 0.24);
+  background: #f59a72;
+  box-shadow: 0 9px 24px rgba(214, 94, 59, 0.24);
 }
 
 .btn--outline {
@@ -325,7 +325,7 @@ button {
 }
 
 .btn--danger:hover {
-  background: #913b2c;
+  background: #8d1f2b;
 }
 
 .icon-button {
@@ -350,8 +350,8 @@ button {
   top: 0;
   z-index: 50;
   height: var(--header-height);
-  background: rgba(248, 245, 238, 0.92);
-  border-bottom: 1px solid rgba(201, 191, 174, 0.46);
+  background: rgba(248, 244, 237, 0.92);
+  border-bottom: 1px solid rgba(198, 188, 172, 0.48);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -576,7 +576,7 @@ button {
 
 /* Footer */
 .site-footer {
-  background: #08271f;
+  background: #121a30;
   color: rgba(250, 247, 238, 0.74);
 }
 
@@ -722,9 +722,9 @@ button {
   padding: 12px 12px 12px 14px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
-  background: #142e25;
+  background: #232c45;
   color: var(--paper);
-  box-shadow: 0 18px 45px rgba(4, 20, 15, 0.3);
+  box-shadow: 0 18px 45px rgba(15, 20, 38, 0.3);
   transform: translateX(-50%);
   animation: toastIn 0.35s var(--ease) both;
 }
@@ -736,7 +736,7 @@ button {
   height: 31px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: rgba(226, 166, 66, 0.18);
+  background: rgba(239, 131, 84, 0.2);
   color: var(--accent);
 }
 
@@ -783,7 +783,7 @@ button {
   border-radius: 18px;
   background: var(--white);
   color: var(--ink);
-  box-shadow: 0 26px 65px rgba(3, 24, 17, 0.25);
+  box-shadow: 0 26px 65px rgba(15, 20, 38, 0.25);
 }
 
 .search-panel__field {
@@ -831,7 +831,7 @@ button {
 }
 
 .search-panel__input input::placeholder {
-  color: #9b9f9a;
+  color: #989aa8;
   font-weight: 600;
 }
 
@@ -842,7 +842,7 @@ button {
 
 .search-panel__field:focus-within {
   border-radius: 10px;
-  box-shadow: inset 0 0 0 2px rgba(198, 138, 43, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(214, 94, 59, 0.55);
 }
 
 .search-panel__select {
@@ -878,8 +878,8 @@ button {
   overflow: hidden;
   padding: 66px 0 54px;
   background:
-    radial-gradient(circle at 88% 8%, rgba(226, 166, 66, 0.16), transparent 30%),
-    radial-gradient(circle at 12% 90%, rgba(65, 117, 94, 0.32), transparent 42%),
+    radial-gradient(circle at 88% 8%, rgba(239, 131, 84, 0.2), transparent 30%),
+    radial-gradient(circle at 12% 90%, rgba(80, 101, 180, 0.32), transparent 42%),
     var(--green);
   color: var(--paper);
 }
@@ -997,7 +997,7 @@ button {
   padding: 8px 11px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 999px;
-  background: rgba(8, 36, 27, 0.62);
+  background: rgba(18, 24, 44, 0.62);
   font-size: 10.5px;
   font-weight: 700;
   color: var(--paper);
@@ -1029,13 +1029,13 @@ button {
   border-radius: 17px;
   background: rgba(255, 253, 249, 0.97);
   color: var(--ink);
-  box-shadow: 0 22px 50px rgba(3, 24, 17, 0.3);
+  box-shadow: 0 22px 50px rgba(15, 20, 38, 0.3);
   transition: transform 0.3s var(--ease), box-shadow 0.3s ease;
 }
 
 .hero-listing:hover {
   transform: translateY(-3px);
-  box-shadow: 0 28px 60px rgba(3, 24, 17, 0.36);
+  box-shadow: 0 28px 60px rgba(15, 20, 38, 0.36);
 }
 
 .hero-listing > img {
@@ -1357,7 +1357,7 @@ button {
 }
 
 .badge--new {
-  background: #e5eee8;
+  background: #e7ecf5;
   color: var(--green);
 }
 
@@ -1383,7 +1383,7 @@ button {
   border-radius: 50%;
   background: rgba(255, 253, 249, 0.92);
   color: var(--ink-soft);
-  box-shadow: 0 4px 12px rgba(20, 36, 30, 0.1);
+  box-shadow: 0 4px 12px rgba(24, 28, 43, 0.1);
   backdrop-filter: blur(8px);
   transition:
     color 0.2s ease,
@@ -1588,8 +1588,8 @@ button {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(8, 32, 24, 0.02) 15%, rgba(8, 32, 24, 0.82) 100%),
-    linear-gradient(0deg, rgba(8, 32, 24, 0.28), transparent 45%);
+    linear-gradient(180deg, rgba(18, 24, 44, 0.02) 15%, rgba(18, 24, 44, 0.82) 100%),
+    linear-gradient(0deg, rgba(18, 24, 44, 0.28), transparent 45%);
   transition: background-color 0.3s ease;
 }
 
@@ -1736,7 +1736,7 @@ button {
   overflow: hidden;
   padding: 96px 0;
   background:
-    radial-gradient(circle at 5% 100%, rgba(226, 166, 66, 0.1), transparent 36%),
+    radial-gradient(circle at 5% 100%, rgba(239, 131, 84, 0.12), transparent 36%),
     var(--green);
   color: var(--paper);
 }
@@ -1885,7 +1885,7 @@ button {
   gap: 6px;
   padding: 8px 11px;
   border-radius: 999px;
-  background: rgba(8, 38, 29, 0.7);
+  background: rgba(18, 24, 44, 0.7);
   color: var(--paper);
   font-size: 9.5px;
   font-weight: 700;
@@ -1901,7 +1901,7 @@ button {
   padding: 32px 0 42px;
   border-bottom: 1px solid var(--line);
   background:
-    radial-gradient(circle at 95% 0%, rgba(226, 166, 66, 0.1), transparent 25%),
+    radial-gradient(circle at 95% 0%, rgba(239, 131, 84, 0.12), transparent 25%),
     var(--paper);
 }
 
@@ -1968,7 +1968,7 @@ button {
 
 .browse-search:focus-within {
   border-color: var(--green-3);
-  box-shadow: 0 0 0 3px rgba(11, 59, 46, 0.08);
+  box-shadow: 0 0 0 3px rgba(30, 42, 74, 0.08);
 }
 
 .browse-search > svg {
@@ -2069,13 +2069,13 @@ button {
   padding: 0 11px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fcfaf5;
+  background: #fffaf2;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .filters__input-with-icon:focus-within {
   border-color: var(--green-3);
-  box-shadow: 0 0 0 3px rgba(11, 59, 46, 0.07);
+  box-shadow: 0 0 0 3px rgba(30, 42, 74, 0.07);
 }
 
 .filters__input-with-icon svg {
@@ -2109,7 +2109,7 @@ button {
   border: 1px solid var(--line);
   border-radius: 9px;
   outline: 0;
-  background: #fcfaf5;
+  background: #fffaf2;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -2119,7 +2119,7 @@ button {
 
 .select-wrap select:focus-visible {
   border-color: var(--green-3);
-  box-shadow: 0 0 0 3px rgba(11, 59, 46, 0.07);
+  box-shadow: 0 0 0 3px rgba(30, 42, 74, 0.07);
 }
 
 .select-wrap > svg {
@@ -2151,7 +2151,7 @@ button {
   border: 1px solid var(--line);
   border-radius: 9px;
   outline: 0;
-  background: #fcfaf5;
+  background: #fffaf2;
   font-size: 12px;
   font-weight: 600;
   appearance: textfield;
@@ -2165,7 +2165,7 @@ button {
 
 .filters__price input:focus-visible {
   border-color: var(--green-3);
-  box-shadow: 0 0 0 3px rgba(11, 59, 46, 0.07);
+  box-shadow: 0 0 0 3px rgba(30, 42, 74, 0.07);
 }
 
 .filters__price-dash {
@@ -2267,7 +2267,7 @@ button {
   height: 15px;
   border-radius: 50%;
   background: var(--white);
-  box-shadow: 0 1px 4px rgba(20, 36, 30, 0.25);
+  box-shadow: 0 1px 4px rgba(24, 28, 43, 0.25);
   transition: transform 0.22s var(--ease);
 }
 
@@ -2280,7 +2280,7 @@ button {
 }
 
 .switch-row input:focus-visible + .switch {
-  outline: 3px solid rgba(198, 138, 43, 0.65);
+  outline: 3px solid rgba(214, 94, 59, 0.65);
   outline-offset: 2px;
 }
 
@@ -2495,7 +2495,7 @@ button {
 
 .action-button:hover {
   border-color: var(--line-strong);
-  background: #fbf8f1;
+  background: #fdf9f2;
 }
 
 .action-button.is-saved {
@@ -2626,7 +2626,7 @@ button {
   padding: 8px 11px;
   border: 1px solid rgba(255, 255, 255, 0.52);
   border-radius: 999px;
-  background: rgba(11, 36, 28, 0.66);
+  background: rgba(18, 24, 44, 0.66);
   font-size: 10px;
   font-weight: 700;
   color: var(--paper);
@@ -2658,7 +2658,7 @@ button {
   padding: 8px 11px;
   border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 999px;
-  background: rgba(11, 36, 28, 0.72);
+  background: rgba(18, 24, 44, 0.72);
   color: var(--paper);
   font-size: 10px;
   font-weight: 700;
@@ -2873,7 +2873,7 @@ button {
   display: flex;
   gap: 15px;
   padding: 21px;
-  border: 1px solid #ead8b7;
+  border: 1px solid #f2cabb;
   border-radius: 14px;
   background: var(--accent-soft);
 }
@@ -2885,7 +2885,7 @@ button {
   height: 41px;
   flex-shrink: 0;
   border-radius: 11px;
-  background: rgba(198, 138, 43, 0.13);
+  background: rgba(214, 94, 59, 0.13);
   color: var(--accent-2);
 }
 
@@ -2901,12 +2901,12 @@ button {
   margin-bottom: 9px;
   font-size: 11px;
   line-height: 1.65;
-  color: #67604f;
+  color: #5d5a66;
 }
 
 .safety-note .text-link {
   font-size: 10.5px;
-  color: #865d1c;
+  color: #9b3b22;
 }
 
 .detail-sidebar {
@@ -2919,7 +2919,7 @@ button {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: var(--white);
-  box-shadow: 0 18px 45px rgba(20, 36, 30, 0.08);
+  box-shadow: 0 18px 45px rgba(24, 28, 43, 0.08);
 }
 
 .contact-card__landlord {
@@ -3078,7 +3078,7 @@ button {
   z-index: 200;
   display: flex;
   flex-direction: column;
-  background: rgba(4, 18, 13, 0.96);
+  background: rgba(10, 14, 28, 0.96);
   color: var(--paper);
   animation: menuFade 0.2s ease both;
 }
@@ -3190,7 +3190,7 @@ button {
 .post-hero {
   padding: 59px 0 55px;
   background:
-    radial-gradient(circle at 90% 15%, rgba(226, 166, 66, 0.16), transparent 28%),
+    radial-gradient(circle at 90% 15%, rgba(239, 131, 84, 0.2), transparent 28%),
     var(--green);
   color: var(--paper);
 }
@@ -3374,7 +3374,7 @@ button {
   border: 1px solid var(--line);
   border-radius: 9px;
   outline: 0;
-  background: #fcfaf5;
+  background: #fffaf2;
   font-size: 12.5px;
   line-height: 1.5;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -3387,13 +3387,13 @@ button {
 
 .field input::placeholder,
 .field textarea::placeholder {
-  color: #9b9f98;
+  color: #989aa8;
 }
 
 .field input:focus-visible,
 .field textarea:focus-visible {
   border-color: var(--green-3);
-  box-shadow: 0 0 0 3px rgba(11, 59, 46, 0.07);
+  box-shadow: 0 0 0 3px rgba(30, 42, 74, 0.07);
 }
 
 .field input[aria-invalid='true'],
@@ -3430,7 +3430,7 @@ button {
 
 .field-grid .select-wrap select {
   height: 45px;
-  background: #fcfaf5;
+  background: #fffaf2;
   font-size: 12.5px;
 }
 
@@ -3453,7 +3453,7 @@ button {
   padding: 6px 10px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fcfaf5;
+  background: #fffaf2;
   font-size: 10.5px;
   font-weight: 700;
   color: var(--ink-soft);
@@ -3513,14 +3513,14 @@ button {
   padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fcfaf5;
+  background: #fffaf2;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .price-input:focus-within,
 .phone-input:focus-within {
   border-color: var(--green-3);
-  box-shadow: 0 0 0 3px rgba(11, 59, 46, 0.07);
+  box-shadow: 0 0 0 3px rgba(30, 42, 74, 0.07);
 }
 
 .price-input > span:first-child,
@@ -3561,7 +3561,7 @@ button {
   padding: 4px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fcfaf5;
+  background: #fffaf2;
 }
 
 .segment-control label {
@@ -3592,7 +3592,7 @@ button {
 .segment-control input:checked + span {
   background: var(--white);
   color: var(--green);
-  box-shadow: 0 2px 7px rgba(20, 36, 30, 0.09);
+  box-shadow: 0 2px 7px rgba(24, 28, 43, 0.09);
 }
 
 .segment-control input:focus-visible + span {
@@ -3612,7 +3612,7 @@ button {
   padding: 12px 13px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #fcfaf5;
+  background: #fffaf2;
 }
 
 .switch-row--card.switch-row {
@@ -3642,7 +3642,7 @@ button {
   padding: 7px 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fcfaf5;
+  background: #fffaf2;
   font-size: 9.5px;
   font-weight: 600;
   color: var(--ink-soft);
@@ -3655,7 +3655,7 @@ button {
 }
 
 .amenity-choice.is-selected {
-  border-color: #b8cfc1;
+  border-color: #b9c6de;
   background: var(--green-soft);
   color: var(--green);
 }
@@ -3698,7 +3698,7 @@ button {
   padding: 31px 20px;
   border: 1.5px dashed var(--line-strong);
   border-radius: 13px;
-  background: #fcfaf5;
+  background: #fffaf2;
   text-align: center;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
@@ -3769,7 +3769,7 @@ button {
   bottom: 6px;
   padding: 4px 7px;
   border-radius: 4px;
-  background: rgba(11, 59, 46, 0.78);
+  background: rgba(20, 28, 52, 0.78);
   font-size: 7.5px;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -3786,7 +3786,7 @@ button {
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: rgba(9, 32, 24, 0.74);
+  background: rgba(18, 24, 44, 0.74);
   color: var(--paper);
   backdrop-filter: blur(5px);
   transition: background-color 0.2s ease;
@@ -3996,9 +3996,9 @@ button {
   gap: 8px;
   margin-top: 15px;
   padding: 0 5px;
-  font-size: 8.5px;
+  font-size: 9px;
   line-height: 1.55;
-  color: var(--muted-2);
+  color: var(--muted);
 }
 
 .post-help svg {
@@ -4218,7 +4218,7 @@ button {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(5, 22, 16, 0.56);
+  background: rgba(15, 20, 38, 0.56);
   backdrop-filter: blur(4px);
   animation: menuFade 0.2s ease both;
 }
@@ -4286,7 +4286,7 @@ button {
 .info-hero {
   padding: 78px 0 74px;
   background:
-    radial-gradient(circle at 90% 10%, rgba(226, 166, 66, 0.13), transparent 28%),
+    radial-gradient(circle at 90% 10%, rgba(239, 131, 84, 0.14), transparent 28%),
     var(--paper-2);
   border-bottom: 1px solid var(--line);
 }
@@ -4454,7 +4454,7 @@ button {
   border: 0;
   border-radius: var(--radius-xl);
   background:
-    radial-gradient(circle at 100% 0%, rgba(226, 166, 66, 0.12), transparent 28%),
+    radial-gradient(circle at 100% 0%, rgba(239, 131, 84, 0.12), transparent 28%),
     var(--green);
   color: var(--paper);
 }
@@ -4539,7 +4539,7 @@ button {
   gap: 13px;
   margin-top: 20px;
   padding: 18px 20px;
-  border: 1px solid #ead8b7;
+  border: 1px solid #f2cabb;
   border-radius: 13px;
   background: var(--accent-soft);
 }
@@ -4551,7 +4551,7 @@ button {
   height: 38px;
   flex-shrink: 0;
   border-radius: 10px;
-  background: rgba(198, 138, 43, 0.14);
+  background: rgba(214, 94, 59, 0.14);
   color: var(--accent-2);
 }
 
@@ -4686,7 +4686,7 @@ button {
   align-items: center;
   padding: 70px 0;
   background:
-    radial-gradient(circle at 50% 0%, rgba(226, 166, 66, 0.11), transparent 35%),
+    radial-gradient(circle at 50% 0%, rgba(239, 131, 84, 0.12), transparent 35%),
     var(--paper);
 }
 
@@ -4931,7 +4931,7 @@ button {
     overflow-y: auto;
     border: 0;
     border-radius: 0;
-    box-shadow: -20px 0 60px rgba(5, 22, 16, 0.24);
+    box-shadow: -20px 0 60px rgba(15, 20, 38, 0.24);
     transform: translateX(110%);
     transition: transform 0.35s var(--ease);
   }
@@ -4959,7 +4959,7 @@ button {
     display: block;
     width: 100%;
     height: 100%;
-    background: rgba(5, 22, 16, 0.5);
+    background: rgba(15, 20, 38, 0.5);
     backdrop-filter: blur(2px);
   }
 
@@ -5778,7 +5778,7 @@ button {
     padding: 9px 16px calc(9px + env(safe-area-inset-bottom));
     border-top: 1px solid var(--line);
     background: rgba(255, 253, 249, 0.96);
-    box-shadow: 0 -8px 30px rgba(20, 36, 30, 0.09);
+    box-shadow: 0 -8px 30px rgba(24, 28, 43, 0.09);
     backdrop-filter: blur(14px);
   }
 
